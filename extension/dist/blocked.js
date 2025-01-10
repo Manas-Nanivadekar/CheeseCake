@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 534:
+/***/ 312:
 /***/ (function() {
 
 
@@ -15,36 +15,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// src/popup.ts
+// src/blocked.ts
 document.addEventListener("DOMContentLoaded", () => {
-    const timerDisplay = document.getElementById("timer");
     const resetButton = document.getElementById("resetTimer");
-    function formatTime(ms) {
-        const seconds = Math.floor((ms / 1000) % 60);
-        const minutes = Math.floor((ms / 1000 / 60) % 60);
-        return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-    }
-    function updateDisplay() {
-        chrome.runtime.sendMessage({ action: "getTimer" }, (response) => {
-            if (response) {
-                const timeLeft = Math.max(0, response.timeLimit - response.currentTime);
-                timerDisplay.textContent = `Time left: ${formatTime(timeLeft)}`;
-                if (response.isRunning) {
-                    timerDisplay.classList.add("running");
-                }
-                else {
-                    timerDisplay.classList.remove("running");
-                }
-            }
-        });
-    }
     resetButton === null || resetButton === void 0 ? void 0 : resetButton.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
         yield chrome.runtime.sendMessage({ action: "resetTimer" });
-        updateDisplay();
+        window.location.href = "https://youtube.com";
     }));
-    // Update display immediately and every second
-    updateDisplay();
-    setInterval(updateDisplay, 1000);
 });
 
 
@@ -57,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__[534]();
+/******/ 	__webpack_modules__[312]();
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=popup.js.map
+//# sourceMappingURL=blocked.js.map

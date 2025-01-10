@@ -1,31 +1,37 @@
 // src/popup.ts
 document.addEventListener("DOMContentLoaded", () => {
-  // Get elements
-  const messageInput = document.getElementById(
-    "messageInput"
-  ) as HTMLInputElement;
-  const sendButton = document.getElementById("sendButton") as HTMLButtonElement;
-  const responseDiv = document.getElementById("response") as HTMLDivElement;
+  const timerDisplay = document.getElementById("timer") as HTMLDivElement;
+  const resetButton = document.getElementById(
+    "resetTimer"
+  ) as HTMLButtonElement;
 
-  // Add click event listener to the button
-  sendButton?.addEventListener("click", async () => {
-    const message = messageInput?.value;
+  function formatTime(ms: number): string {
+    const seconds = Math.floor((ms / 1000) % 60);
+    const minutes = Math.floor((ms / 1000 / 60) % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
 
-    // Send message to background script
-    const response = await chrome.runtime.sendMessage({
-      action: "processMessage",
-      message,
+  function updateDisplay() {
+    chrome.runtime.sendMessage({ action: "getTimer" }, (response) => {
+      if (response) {
+        const timeLeft = Math.max(0, response.timeLimit - response.currentTime);
+        timerDisplay.textContent = `Time left: ${formatTime(timeLeft)}`;
+
+        if (response.isRunning) {
+          timerDisplay.classList.add("running");
+        } else {
+          timerDisplay.classList.remove("running");
+        }
+      }
     });
+  }
 
-    // Display the response
-    if (responseDiv) {
-      responseDiv.textContent = response || "No response received";
-    }
+  resetButton?.addEventListener("click", async () => {
+    await chrome.runtime.sendMessage({ action: "resetTimer" });
+    updateDisplay();
   });
 
-  // Example of getting current tab information
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const currentTab = tabs[0];
-    console.log("Current tab:", currentTab.url);
-  });
+  // Update display immediately and every second
+  updateDisplay();
+  setInterval(updateDisplay, 1000);
 });

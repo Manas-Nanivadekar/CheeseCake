@@ -4,7 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chrome Extension Popup</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+    <title>YouTube Timer</title>
     <style>
       body {
         width: 300px;
@@ -16,13 +17,22 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        align-items: center;
       }
 
-      input {
-        padding: 8px;
-        border: 1px solid #ccc;
+      #timer {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 10px;
         border-radius: 4px;
-        font-size: 14px;
+        background-color: #f0f0f0;
+        min-width: 100px;
+        text-align: center;
+      }
+
+      #timer.running {
+        background-color: #e8f5e9;
+        color: #2e7d32;
       }
 
       button {
@@ -38,23 +48,13 @@
       button:hover {
         background-color: #45a049;
       }
-
-      #response {
-        margin-top: 10px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        min-height: 20px;
-        background-color: #f9f9f9;
-      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h2>My Chrome Extension</h2>
-      <input type="text" id="messageInput" placeholder="Enter your message" />
-      <button id="sendButton">Send Message</button>
-      <div id="response"></div>
+      <h2>YouTube Timer</h2>
+      <div id="timer">Time left: 2:00</div>
+      <button id="resetTimer">Reset Timer</button>
     </div>
     <script src="popup.js"></script>
   </body>
