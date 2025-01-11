@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import HighlightBox from "./HighlightBox";
 import { Button } from "./ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   return (
     <div className="relative">
@@ -21,25 +24,29 @@ const HeroSection = () => {
               Start now and supercharge learning experiences like its a piece of
               Cheese Cake!
             </p>
+
             <div className="mt-10 flex justify-center gap-4">
-              <Button
-                onClick={() => navigate("/login")}
-                className="px-8 py-6 text-lg bg-[#0A0B1F] text-white hover:bg-[#3EEEC0] transition-colors duration-300 rounded-full"
-              >
-                <img
-                  src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                  alt="Google"
-                  className="w-10 h-10 mr-2"
-                />
-                Sign up with Google
-              </Button>
-              <Button
-                onClick={() => navigate("/login")}
-                variant="outline"
-                className="px-8 py-6 text-lg border-[#0A0B1F] text-[#0A0B1F] hover:bg-white hover:text-[#0A0B1F] transition-colors duration-300 rounded-full"
-              >
-                Sign up for free
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  onClick={() => navigate("/login")}
+                  className="px-8 py-6 text-lg bg-[#0A0B1F] text-white hover:bg-[#3EEEC0] transition-colors duration-300 rounded-full"
+                >
+                  <img
+                    src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+                    alt="Google"
+                    className="w-10 h-10 mr-2"
+                  />
+                  Sign up with Google
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate("/pathway/view")}
+                  variant="outline"
+                  className="px-8 py-6 text-lg border-[#0A0B1F] text-[#0A0B1F] hover:bg-white hover:text-[#0A0B1F] transition-colors duration-300 rounded-full"
+                >
+                  Explore Pathways
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -47,7 +54,7 @@ const HeroSection = () => {
 
       <div
         className="absolute left-1/2 -translate-x-1/2 w-full max-w-2xl px-4"
-        style={{ top: "38%" }}
+        style={{ top: "35%" }}
       >
         <div className="aspect-video bg-black rounded-lg overflow-hidden">
           <video

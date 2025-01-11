@@ -1,32 +1,40 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import Cheesie from './Cheesie'
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Cheesie from "./Cheesie";
 
 interface BasicPuzzleProps {
-  question: string
-  answer: string
-  hint: string
+  question: string;
+  answer: string;
+  hint: string;
 }
 
-const BasicPuzzle: React.FC<BasicPuzzleProps> = ({ question, answer, hint }) => {
-  const [userAnswer, setUserAnswer] = useState('')
-  const [showHint, setShowHint] = useState(false)
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+const BasicPuzzle: React.FC<BasicPuzzleProps> = ({
+  question,
+  answer,
+  hint,
+}) => {
+  const [userAnswer, setUserAnswer] = useState("");
+  const [showHint, setShowHint] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const handleSubmit = () => {
-    setIsCorrect(userAnswer.toLowerCase().trim() === answer.toLowerCase().trim())
-  }
+    setIsCorrect(
+      userAnswer.toLowerCase().trim() === answer.toLowerCase().trim()
+    );
+  };
 
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-primary">Basic Puzzle</CardTitle>
+        <CardTitle className="text-2xl font-bold text-primary">
+          Basic Puzzle
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Cheesie
-          emotion={isCorrect === null ? 'thinking' : isCorrect ? 'excited' : 'confused'}
+          emotion={isCorrect === null ? "pointing" : isCorrect ? "good" : "sad"}
           message={
             isCorrect === null
               ? "Here's a tricky puzzle! Can you solve it?"
@@ -63,8 +71,7 @@ const BasicPuzzle: React.FC<BasicPuzzleProps> = ({ question, answer, hint }) => 
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default BasicPuzzle
-
+export default BasicPuzzle;

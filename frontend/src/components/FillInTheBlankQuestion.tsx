@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Cheesie from "./Cheesie";
-import PathwayLearning from "@/components/PathwayLearning";
 
 interface FillInTheBlanksProps {
   question: string;
@@ -39,9 +38,7 @@ const FillInTheBlanks: React.FC<FillInTheBlanksProps> = ({
       </CardHeader>
       <CardContent>
         <Cheesie
-          emotion={
-            isCorrect === null ? "thinking" : isCorrect ? "excited" : "confused"
-          }
+          emotion={isCorrect === null ? "pointing" : isCorrect ? "dude" : "sad"}
           message={
             isCorrect === null
               ? "Let's fill in the blanks! Can you complete the sentence?"

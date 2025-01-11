@@ -43,9 +43,7 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
       </CardHeader>
       <CardContent>
         <Cheesie
-          emotion={
-            isCorrect === null ? "thinking" : isCorrect ? "excited" : "confused"
-          }
+          emotion={isCorrect === null ? "pointing" : isCorrect ? "dude" : "sad"}
           message={
             isCorrect === null
               ? "Time for a multiple choice question! What do you think is the right answer?"

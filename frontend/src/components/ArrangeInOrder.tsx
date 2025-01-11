@@ -52,9 +52,7 @@ const ArrangeInOrder: React.FC<ArrangeInOrderProps> = ({
       </CardHeader>
       <CardContent>
         <Cheesie
-          emotion={
-            isCorrect === null ? "thinking" : isCorrect ? "excited" : "confused"
-          }
+          emotion={isCorrect === null ? "pointing" : isCorrect ? "dude" : "sad"}
           message={
             isCorrect === null
               ? "Let's put these in order! Drag and drop the items to arrange them correctly."
