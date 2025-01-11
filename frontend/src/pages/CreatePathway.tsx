@@ -1,6 +1,5 @@
-import { Play } from 'lucide-react'
+import { Play, Upload, LinkIcon, Plus } from 'lucide-react'
 import { useState } from 'react'
-import { Upload, LinkIcon, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,10 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import SelectedTemplates from '@/components/SelectTemplates'
+import { CheesieGuide } from '@/components/ChessieGuide'
 
 const AgendaSection = () => {
-
-    const [selectedTemplates, setSelectedTemplates] = useState<string[]>([])
+    const [currentStep, setCurrentStep] = useState<'upload' | 'name' | 'templates' | 'build'>('upload');
+    const [pathwayName, setPathwayName] = useState('');
+    const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+    const [fileUploaded, setFileUploaded] = useState(false);
 
     const toggleTemplate = (id: string) => {
         setSelectedTemplates(prev =>
@@ -19,24 +21,53 @@ const AgendaSection = () => {
         )
     }
 
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setFileUploaded(true);
+            setCurrentStep('name');
+        }
+    }
+
+    const handleNameSubmit = () => {
+        if (pathwayName.trim()) {
+            setCurrentStep('templates');
+        }
+    }
+
+    const handleTemplateSelection = () => {
+        if (selectedTemplates.length > 0) {
+            setCurrentStep('build');
+        }
+    }
+
     const templates = [
-        { id: '1', title: 'Basic Learning Path' },
-        { id: '2', title: 'Advanced Course' },
-        { id: '3', title: 'Workshop Series' },
-        { id: '4', title: 'Certification Track' },
-        { id: '5', title: 'Onboarding Program' },
-        { id: '6', title: 'Skill Development' },
-        { id: '7', title: 'Team Training' },
-        { id: '8', title: 'Leadership Course' },
-        { id: '9', title: 'Custom Template' },
+        { id: '1', title: 'Fill in the blanks' },
+        { id: '2', title: 'Multiple Choice Questions' },
+        { id: '3', title: 'Review Based Questions' },
+        { id: '4', title: 'Arrange in Correct Order' },
+        { id: '5', title: 'Basic puzzles' },
     ]
 
+    const isStepComplete = (step: typeof currentStep) => {
+        switch (step) {
+            case 'upload':
+                return fileUploaded;
+            case 'name':
+                return pathwayName.trim() !== '';
+            case 'templates':
+                return selectedTemplates.length > 0;
+            case 'build':
+                return true;
+            default:
+                return false;
+        }
+    }
 
     return (
         <section className="w-full bg-[#FFFC6D] min-h-screen">
+            {/* Hero Section */}
             <div className="container mx-auto px-4 py-12">
                 <div className="grid gap-12 lg:grid-cols-2 items-center">
-                    {/* Left Column */}
                     <div className="space-y-8">
                         <div className="space-y-2">
                             <h2 className="text-xl font-semibold text-[#0A0B1F]">
@@ -48,8 +79,7 @@ const AgendaSection = () => {
                         </div>
                         <p className="text-lg md:text-xl text-[#0A0B1F]/80 max-w-xl">
                             Build your plan, even for multiple days. Gather your requirements.
-                            Generate a gamified pathway in seconds. Thanks to the
-                            Cheese Cake, your pathways will practically created themselves.
+                            Generate a gamified pathway in seconds.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Button
@@ -67,26 +97,25 @@ const AgendaSection = () => {
                         </div>
                     </div>
 
-                    {/* Right Column */}
                     <div className="relative">
                         <div className="bg-[#94a4ff] rounded-2xl p-4 shadow-xl">
                             <img
-                                src={`https://res.cloudinary.com/dnvh2fya6/image/upload/v1730044621/MyBus/redbus-logo-5B2A75C4DA-seeklogo.com_kheclj.png`}
+                                src="https://res.cloudinary.com/dnvh2fya6/image/upload/v1730567227/MyBus/a431804f-0855-4212-b67a-765c3de500bb_xhulhj.jpg"
                                 alt="Agenda Planner Interface"
                                 className="w-full h-auto rounded-lg"
                             />
                         </div>
-                        {/* Decorative Elements */}
-                        <div className="absolute -z-10 top-8 right-8 w-full h-full bg-[#3EEEC0]/20 rounded-2xl"></div>
+                        <div className="absolute -z-10 top-8 right-8 w-full h-full bg-[#3EEEC0]/20 rounded-2xl" />
                     </div>
                 </div>
             </div>
 
+            {/* Main Content Section */}
             <div className="min-h-screen bg-[#f7f8fa] py-12">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto space-y-12">
                         {/* Upload Section */}
-                        <Card className="p-6">
+                        <Card className={`p-6 ${currentStep !== 'upload' ? 'opacity-50' : ''}`}>
                             <h2 className="text-2xl font-bold text-[#0A0B1F] mb-6">Create New Pathway</h2>
                             <Tabs defaultValue="file" className="w-full">
                                 <TabsList className="mb-6">
@@ -106,6 +135,7 @@ const AgendaSection = () => {
                                             className="hidden"
                                             id="file-upload"
                                             accept=".pdf,.doc,.docx"
+                                            onChange={handleFileUpload}
                                         />
                                         <Label
                                             htmlFor="file-upload"
@@ -127,6 +157,12 @@ const AgendaSection = () => {
                                             type="url"
                                             placeholder="Enter your URL here"
                                             className="w-full p-4"
+                                            onChange={(e) => {
+                                                if (e.target.value) {
+                                                    setFileUploaded(true);
+                                                    setCurrentStep('name');
+                                                }
+                                            }}
                                         />
                                     </div>
                                 </TabsContent>
@@ -134,19 +170,35 @@ const AgendaSection = () => {
                         </Card>
 
                         {/* Pathway Name */}
-                        <Card className="p-6">
+                        <Card className={`p-6 ${currentStep !== 'name' ? 'opacity-50' : ''}`}>
                             <Label htmlFor="pathway-name" className="text-lg font-medium text-[#0A0B1F] mb-2 block">
                                 Pathway Name
                             </Label>
-                            <Input
-                                id="pathway-name"
-                                placeholder="Enter a name for your pathway"
-                                className="w-full p-4"
-                            />
+                            <div className="flex gap-4">
+                                <Input
+                                    id="pathway-name"
+                                    placeholder="Enter a name for your pathway"
+                                    className="w-full p-4"
+                                    value={pathwayName}
+                                    onChange={(e) => setPathwayName(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleNameSubmit();
+                                        }
+                                    }}
+                                />
+                                <Button
+                                    onClick={handleNameSubmit}
+                                    disabled={!pathwayName.trim()}
+                                    className="bg-[#0A0B1F] text-white"
+                                >
+                                    Next
+                                </Button>
+                            </div>
                         </Card>
 
-                        {/* Template Grid */}
-                        <div className="space-y-6">
+                        {/* Template Selection */}
+                        <div className={`space-y-6 ${currentStep !== 'templates' ? 'opacity-50' : ''}`}>
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-xl font-semibold text-[#0A0B1F]">
                                     Select Templates
@@ -163,47 +215,63 @@ const AgendaSection = () => {
                                         whileTap={{ scale: 0.98 }}
                                     >
                                         <Card
-                                            className={`cursor-pointer transition-colors duration-200 ${selectedTemplates.includes(template.id)
+                                            className={`cursor-pointer transition-colors duration-200 ${
+                                                selectedTemplates.includes(template.id)
                                                     ? 'border-[#3EEEC0] bg-[#3EEEC0]/10'
                                                     : 'hover:border-[#94a4ff]'
-                                                }`}
+                                            }`}
                                             onClick={() => toggleTemplate(template.id)}
                                         >
                                             <CardContent className="p-6 flex items-center justify-between">
                                                 <span className="font-medium">{template.title}</span>
-                                                <Plus className={`h-5 w-5 ${selectedTemplates.includes(template.id)
+                                                <Plus className={`h-5 w-5 ${
+                                                    selectedTemplates.includes(template.id)
                                                         ? 'text-[#3EEEC0]'
                                                         : 'text-[#94a4ff]'
-                                                    }`} />
+                                                }`} />
                                             </CardContent>
                                         </Card>
                                     </motion.div>
                                 ))}
                             </div>
+                            {selectedTemplates.length > 0 && (
+                                <Button
+                                    onClick={handleTemplateSelection}
+                                    className="mt-6 bg-[#0A0B1F] text-white"
+                                >
+                                    Continue with Selected Templates
+                                </Button>
+                            )}
                         </div>
 
-                        {/* Selected Templates Component */}
+                        {/* Selected Templates Display */}
                         <SelectedTemplates
                             templates={templates}
                             selectedIds={selectedTemplates}
                             onRemove={toggleTemplate}
                         />
 
-                        {/* Start Building Button */}
-                        <div className="flex justify-center pt-8">
-                            <Button
-                                className="bg-[#0A0B1F] text-white hover:bg-[#3EEEC0] transition-colors duration-300 px-8 py-6 text-lg rounded-full"
-                                disabled={selectedTemplates.length === 0}
-                            >
-                                Start Building New Pathway
-                            </Button>
-                        </div>
+                        {/* Final Build Button */}
+                        {currentStep === 'build' && (
+                            <div className="flex justify-center pt-8">
+                                <Button
+                                    className="bg-[#0A0B1F] text-white hover:bg-[#3EEEC0] transition-colors duration-300 px-8 py-6 text-lg rounded-full"
+                                >
+                                    Start Building New Pathway
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
+
+            {/* Cheesie Guide */}
+            <CheesieGuide
+                currentStep={currentStep}
+                onComplete={() => console.log('Pathway creation completed!')}
+            />
         </section>
     )
 }
 
 export default AgendaSection
-

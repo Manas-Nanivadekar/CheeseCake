@@ -32,6 +32,10 @@ const navItems = [
             { title: "Browse Pathway", href: "/pathway/browse" },
         ]
     },
+    {
+        title: 'Leaderboard',
+        href: '/leaderboard',
+    },
 ]
 
 const MobileNav = ({ items, setIsOpen }: MobileNavProps) => {
