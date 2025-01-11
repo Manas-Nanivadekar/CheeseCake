@@ -30,47 +30,81 @@ coursesRouter.get('/', async (req, res) => {
     }
 })
 
-coursesRouter.post('/api/get-presigned-url', async (req, res) => {
-    const { courseName, fileType } = req.body;
+coursesRouter.post('/get-presigned-url', async (req, res) => {
+    const { courseName, fileType, fileName, websiteUrl } = req.body;
+    let course,presignedUrl;
 
-    if (!fileType || !courseName) {
-        return res.status(400).json({ error: 'Filetype and course name is required' });
+    if (websiteUrl) {
+        try {
+            const response = await fetch('http://localhost:8000/process/website', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "url": websiteUrl
+                })
+            })
+            const data = await response.json()
+            course = await client.course.create({
+                data: {
+                    name: courseName,
+                    json: data
+                }
+            })
+        } catch (error) {
+            console.error('Website processing error:', error);
+            return res.status(500).json({ error: 'Failed to process website' });
+        }
+    } else {
+        if (!fileType || !courseName) {
+            return res.status(400).json({ error: 'Filetype and course name is required' });
+        }
+
+        const params = {
+            Bucket: process.env.S3_BUCKET,
+            Key: `${fileName}`,
+            ContentType: fileType
+        };
+
+        try {
+            const command = new PutObjectCommand(params);
+            presignedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            const s3Url = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+            course = await client.course.create({
+                data: {
+                    name: courseName,
+                    s3_uri: s3Url,
+                    json: null
+                }, select: {
+                    id: true
+                }
+            })
+        } catch (error) {
+            console.error('Presigned URL generation error:', error);
+            res.status(500).json({ error: 'Failed to generate presigned URL' });
+        }
     }
 
-    const fileName = `uploads/${Math.random().toString(36).substring(7)}`;
-    const fileExtension = fileType.split('/')[1];
-    const fullFileName = `${fileName}.${fileExtension}`;
-
-    const params = {
-        Bucket: process.env.S3_BUCKET,
-        Key: fullFileName,
-        ContentType: fileType
-    };
-
-    try {
-        const command = new PutObjectCommand(params);
-        const presignedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        const getCommand = new GetObjectCommand(params);
-        const viewUrl = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
-
-        await client.course.create({
-            data: {
-                name: courseName,
-                s3_uri: viewUrl,
-                json: null
-            }, select: {
-                id: true
+    await client.user.update({
+        where: { id: req.user.id },
+        data: {
+            courses: {
+                push: {
+                    id: course.id
+                }
             }
-        })
-        return res.json({
-            success: true,
-            presignedUrl,
-            viewUrl,
-        });
-    } catch (error) {
-        console.error('Presigned URL generation error:', error);
-        res.status(500).json({ error: 'Failed to generate presigned URL' });
-    }
+        }
+    })
+
+    return res.json({
+        success: true,
+        presignedUrl,
+        s3Url,
+        courseId: course.id
+    });
+
 });
 
 coursesRouter.post('/create/pathway', async (req, res) => {
@@ -81,7 +115,10 @@ coursesRouter.post('/create/pathway', async (req, res) => {
 
     try {
         const courseExists = await client.course.findUnique({
-            where: { id }
+            where: { id },
+            select: {
+                s3_uri: true
+            }
         });
 
         if (!courseExists) {
@@ -89,9 +126,22 @@ coursesRouter.post('/create/pathway', async (req, res) => {
                 error: 'Course not found'
             });
         }
+
+        const response = await fetch('http://localhost:8000/process/s3', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              "url": courseExists.s3_uri
+            })
+          })
+
+        const data = await response.json();
+
         await client.course.update({
             where: { id: id },
-            data: { json: 'sometriggerpointtoimplmenet' }
+            data: { json: data }
         })
 
         return res.json({
@@ -103,5 +153,7 @@ coursesRouter.post('/create/pathway', async (req, res) => {
         res.status(500).json({ error: 'Failed to create pathway' });
     }
 })
+
+
 
 module.exports = coursesRouter

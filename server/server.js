@@ -5,10 +5,14 @@ const cookieParser = require('cookie-parser');
 const { authenticateUser, isAdmin } = require('./utils/middleware');
 const coursesRouter = require('./routes/courses');
 app.use(cookieParser());
+const cors = require('cors')
 
 app.use(express.json())
+app.use(cors())
 app.use('/api', router)
-app.use('/course', authenticateUser, isAdmin,coursesRouter)
+// app.use('/course', authenticateUser, isAdmin,coursesRouter)
+app.use('/course',coursesRouter)
+
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000')

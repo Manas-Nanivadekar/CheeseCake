@@ -14,11 +14,10 @@ router.post('/register', async (req, res) => {
                 message: 'Please fill all fields'
             })
         }
-        const org = await client.organization.create({
-            data: {
+        const org = await client.organization.findFirst({
+            where: {
                 org_name: orgName
-            },
-            select: {
+            }, select: {
                 id: true
             }
         })
@@ -102,6 +101,8 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
+router.post('/score', async (req, res) => {
+    const { score } = req.body;
+})
 
 module.exports = router
