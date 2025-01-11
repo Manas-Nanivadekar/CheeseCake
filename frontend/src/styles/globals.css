@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+.highlight-box {
+  @apply inline-flex items-center rounded-lg px-2 py-1;
+}
+
