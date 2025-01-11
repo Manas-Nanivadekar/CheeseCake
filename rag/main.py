@@ -509,12 +509,12 @@ async def process_document(file: UploadFile = File(...)):
 
 
 @app.post("/process/s3")
-async def process_s3_document(url: str = Form(...)):
+async def process_s3_document(input_data: URLInput):
     """
     Process a PDF document from an S3 URL
     """
     try:
-        output = processor.process_input(url)
+        output = processor.process_input(input_data.url)
         return output
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
