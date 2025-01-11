@@ -3,3 +3,15 @@ faiss-cpu
 openai 
 beautifulsoup4 
 requests
+langchain_community
+langchain_openai
+boto3
+pypdf
+fastapi[standard]
+fastapi
+uvicorn
+python-multipart
+langchain
+langchain-community
+langchain-openai
+python-dotenv

@@ -1,0 +1,61 @@
+{
+  "source": "https://cheese-cake.s3.ap-south-1.amazonaws.com/gate-syllabus.pdf",
+  "type": "document",
+  "questions": {
+    "mcq": {
+      "learning_context": "In the context of computer networks, Network Address Translation (NAT) plays a crucial role in modifying network address information in the IP header of packets while they are in transit across a traffic routing device. This process enables multiple devices on a local network to access external networks using a single public IP address, thus conserving public IP addresses and enhancing network security by hiding internal IP addresses from external networks.",
+      "question": "What feature of NAT helps in conserving the number of public IP addresses used by a network?",
+      "options": {
+        "A": "Translating private IP addresses to a public IP address",
+        "B": "Prioritizing IP packet transmission",
+        "C": "Encrypting data packets",
+        "D": "Assigning static IP addresses"
+      },
+      "correct_answer": "A",
+      "explanation": "Network Address Translation (NAT) conserves the number of public IP addresses used by a network by translating the private (internal) IP addresses of devices on a local network to a single public IP address (or a few addresses) for all outgoing traffic to external networks. This allows multiple devices to share a single or a few public IP addresses, reducing the need for individual public IP addresses for each device on the local network."
+    },
+    "true_false": {
+      "learning_context": "This context covers foundational concepts in computer science, focusing on operating systems, databases, computer networks, theory of computation, and compiler design. Key concepts include the management of processes and memory in operating systems, the structure and operations of databases, the layered architecture of computer networks, the principles behind computing languages and automata, and the process of translating and optimizing code in compiler design.",
+      "questions": [
+        {
+          "statement": "Deadlock is a situation in operating systems where two or more processes hold resources and each process is waiting for the other to release the resource, leading to a standstill.",
+          "answer": true,
+          "explanation": "This is true because deadlock occurs when multiple processes prevent each other from progressing by each holding onto resources the others need, creating a cycle of dependencies that cannot be broken without external intervention."
+        },
+        {
+          "statement": "In the theory of computation, context-free grammars can be used to generate regular languages, making them less powerful than finite automata.",
+          "answer": false,
+          "explanation": "This is false because context-free grammars can generate a superset of the languages that finite automata can generate, making them more powerful in terms of the complexity of languages they can describe."
+        }
+      ]
+    },
+    "fill_blanks": {
+      "learning_context": "In computer networks, understanding how data is transmitted and managed across networks is crucial. This involves recognizing the different protocols and technologies that enable devices to communicate, including how addresses are assigned and managed in networks.",
+      "question": "In computer networking, IP addressing is managed through technologies such as _____ and _____ notation to efficiently route data.",
+      "answers": [
+        "IPv4",
+        "CIDR"
+      ],
+      "explanation": "IPv4 is the fourth version of the Internet Protocol, which assigns a unique address to devices on a network. CIDR (Classless Inter-Domain Routing) notation is a method for allocating IP addresses and routing Internet Protocol packets. Both are essential for managing and routing data across computer networks."
+    },
+    "ranking": {
+      "learning_context": "The process of handling a database query involves several steps, from interpreting the query to accessing the data and returning results. Understanding each step and its sequence is crucial for efficient database management and optimization.",
+      "scenario": "A database administrator is tasked with optimizing a query to fetch records from a database. The query must go through several steps to ensure it is efficiently executed and the necessary data is retrieved without unnecessary overhead.",
+      "question": "What is the correct order of steps for executing a database query?",
+      "options": [
+        "Execute the query on the database",
+        "Translate the query into the database's query language",
+        "Optimize the query execution plan",
+        "Parse the query to check for syntax errors"
+      ],
+      "correct_order": [
+        4,
+        2,
+        3,
+        1
+      ],
+      "explanation": "The correct sequence starts with parsing the query to identify any syntax errors. Next, the query is translated into the specific query language of the database, followed by the optimization of the query execution plan to ensure the most efficient retrieval method. Finally, the optimized query is executed on the database to fetch the required data."
+    }
+  },
+  "processed_at": "2025-01-11 09:25:10"
+}

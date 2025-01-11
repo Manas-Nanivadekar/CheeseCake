@@ -1,0 +1,52 @@
+{
+  "source": "https://cheese-cake.s3.ap-south-1.amazonaws.com/gate-syllabus.pdf",
+  "type": "document",
+  "questions": {
+    "mcq": {
+      "learning_context": "In the realm of computer networks, the concept of layering is crucial for the design and operation of network architectures. The OSI and TCP/IP models are fundamental frameworks that define these layers, each with specific responsibilities to facilitate communication over a network. Understanding the roles and functions of each layer is key to grasping how networks operate and how data is transmitted from one node to another.",
+      "question": "Which layer of the OSI model is responsible for routing data packets based on their destination IP address?",
+      "options": {
+        "A": "Network Layer",
+        "B": "Data Link Layer",
+        "C": "Transport Layer",
+        "D": "Application Layer"
+      },
+      "correct_answer": "A",
+      "explanation": "The Network Layer is the third layer of the OSI model and is responsible for routing data packets based on their destination IP addresses. It determines the best path through the network for the data to travel from its source to its destination. This layer is where routing occurs, and protocols like IP (Internet Protocol) operate, making it crucial for data transmission across diverse networks."
+    },
+    "true_false": {
+      "learning_context": "This context covers fundamental concepts in computer science, including how operating systems manage resources (like CPU scheduling, memory management), the principles of database systems (such as data modeling with ER-models, and the relational model with SQL), basics of computer networking (including the OSI and TCP/IP models, IP addressing), theory of computation (focusing on automata and computability), and compiler design (including lexical analysis and code optimization). Understanding these areas is crucial for grasping how computers and networks operate, manage data, and communicate.",
+      "questions": [
+        {
+          "statement": "Deadlock is a situation where a set of processes are blocked because each process is holding a resource and waiting for another resource acquired by some other process.",
+          "answer": true,
+          "explanation": "This statement is true as deadlock precisely describes the scenario where multiple processes wait on each other to release resources, leading to a standstill where none of the processes can proceed."
+        },
+        {
+          "statement": "The OSI model has five layers, starting from the physical layer up to the application layer.",
+          "answer": false,
+          "explanation": "This statement is false because the OSI model consists of seven layers, not five, starting from the physical layer and going up to the application layer."
+        }
+      ]
+    },
+    "fill_blanks": {
+      "learning_context": "Computer Networks involve the study of how computers communicate with each other over various types of networks. A fundamental aspect of this field is understanding how data is transmitted across these networks, which includes knowledge of protocols and technologies like IP addressing and Network Address Translation (NAT).",
+      "question": "In computer networks, IP addressing and _____ are crucial for facilitating communication between computers, whereas _____ is essential for translating private IP addresses to public ones for Internet access.",
+      "answers": ["IPv4", "NAT"],
+      "explanation": "IPv4 is a protocol for IP addressing that assigns unique addresses to devices on a network, making it possible for them to communicate. NAT, or Network Address Translation, is a technology used to translate private (not globally unique) IP addresses of devices in a local network to a single public IP address, allowing for internet access and conserving the limited number of available IPv4 addresses."
+    },
+    "ranking": {
+      "learning_context": "Understanding how a computer system executes a program involves knowing the steps from code compilation to execution. The compiler translates high-level code into machine code, which is then loaded into memory. The operating system schedules the program's execution, managing resources like CPU and memory. The program may require system calls to interact with the operating system for resources or to perform specific tasks.",
+      "scenario": "Imagine you've written a program in C that calculates and prints the Fibonacci sequence. You want to run this program on your computer. To successfully execute this program, the computer will go through several steps, including compiling the program, loading it into memory, making system calls for resources, and finally executing the program by the CPU.",
+      "question": "What is the correct order of steps for executing the C program on the computer?",
+      "options": [
+        "The operating system schedules the program's execution and manages resources.",
+        "The program makes system calls to interact with the operating system for resources.",
+        "The C program is compiled into machine code.",
+        "The compiled program is loaded into memory."
+      ],
+      "correct_order": [3, 4, 2, 1],
+      "explanation": "The correct order starts with the C program being compiled into machine code, which is a necessary first step to translate the high-level code into a form the computer can understand. Next, the compiled program is loaded into memory, preparing it for execution. As the program runs, it may make system calls to request resources from the operating system, such as reading from or writing to a file. Finally, the operating system schedules the program's execution, managing CPU time and memory allocation to ensure the program runs efficiently."
+    }
+  }
+}
