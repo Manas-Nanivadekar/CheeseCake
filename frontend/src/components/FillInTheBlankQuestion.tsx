@@ -1,61 +1,64 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import FeedbackMessage from './FeedbackMessage'
+import Cheesie from './Cheesie'
 
-interface FillInTheBlankQuestionProps {
+interface FillInTheBlanksProps {
   question: string
-  correctAnswer: string
+  answers: string[]
 }
 
-const FillInTheBlankQuestion: React.FC<FillInTheBlankQuestionProps> = ({
-  question,
-  correctAnswer,
-}) => {
-  const [answer, setAnswer] = useState('')
-  const [showFeedback, setShowFeedback] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
+const FillInTheBlanks: React.FC<FillInTheBlanksProps> = ({ question, answers }) => {
+  const [userAnswers, setUserAnswers] = useState<string[]>(new Array(answers.length).fill(''))
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const handleSubmit = () => {
-    const correct = answer.toLowerCase().trim() === correctAnswer.toLowerCase().trim()
+    const correct = userAnswers.every((answer, index) => 
+      answer.toLowerCase().trim() === answers[index].toLowerCase().trim()
+    )
     setIsCorrect(correct)
-    setShowFeedback(true)
   }
 
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-primary">{question}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-primary">Fill in the Blanks</CardTitle>
       </CardHeader>
       <CardContent>
+        <Cheesie
+          emotion={isCorrect === null ? 'thinking' : isCorrect ? 'excited' : 'confused'}
+          message={
+            isCorrect === null
+              ? "Let's fill in the blanks! Can you complete the sentence?"
+              : isCorrect
+              ? "Great job! You've filled in all the blanks correctly!"
+              : "Oops! That's not quite right. Want to try again?"
+          }
+        />
+        <p className="mb-4">{question}</p>
         <div className="space-y-4">
-          <Input
-            type="text"
-            placeholder="Type your answer here"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-          />
+          {userAnswers.map((answer, index) => (
+            <Input
+              key={index}
+              type="text"
+              placeholder={`Blank ${index + 1}`}
+              value={answer}
+              onChange={(e) => {
+                const newAnswers = [...userAnswers]
+                newAnswers[index] = e.target.value
+                setUserAnswers(newAnswers)
+              }}
+            />
+          ))}
         </div>
-        <motion.div
-          className="mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Button
-            onClick={handleSubmit}
-            disabled={answer.trim() === ''}
-            className="w-full"
-          >
-            Submit Answer
-          </Button>
-        </motion.div>
+        <Button onClick={handleSubmit} className="mt-4 w-full">
+          Check Answer
+        </Button>
       </CardContent>
-      {showFeedback && <FeedbackMessage isCorrect={isCorrect} />}
     </Card>
   )
 }
 
-export default FillInTheBlankQuestion
+export default FillInTheBlanks
+

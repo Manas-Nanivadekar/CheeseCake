@@ -7,6 +7,8 @@ import LandingPage from './pages/LandingPage';
 import QuizPage from "./pages/QuizPage";
 import AgendaSection from "./pages/CreatePathway";
 import { Login } from "./pages/Login";
+import Content from "./pages/Content";
+import GamefiedQuiz from "./pages/Content";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +38,7 @@ const router = createBrowserRouter([
       {
         path: "/pathway/view",
         index: true,
-        element: <QuizPage />,
+        element: <GamefiedQuiz />,
       },
       {
         path: "/pathway/view/:id",

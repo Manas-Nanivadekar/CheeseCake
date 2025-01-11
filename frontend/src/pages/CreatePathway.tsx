@@ -1,5 +1,5 @@
 import { Play, Upload, LinkIcon, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,31 +14,43 @@ const AgendaSection = () => {
     const [pathwayName, setPathwayName] = useState('');
     const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
     const [fileUploaded, setFileUploaded] = useState(false);
+    const [url, setUrl] = useState('');
 
-    const toggleTemplate = (id: string) => {
+    const toggleTemplate = useCallback((id: string) => {
         setSelectedTemplates(prev =>
             prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]
-        )
-    }
+        );
+    }, []);
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             setFileUploaded(true);
             setCurrentStep('name');
         }
-    }
+    }, []);
 
-    const handleNameSubmit = () => {
+    const handleUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setUrl(e.target.value);
+    }, []);
+
+    const handleUrlSubmit = useCallback(() => {
+        if (url.trim()) {
+            setFileUploaded(true);
+            setCurrentStep('name');
+        }
+    }, [url]);
+
+    const handleNameSubmit = useCallback(() => {
         if (pathwayName.trim()) {
             setCurrentStep('templates');
         }
-    }
+    }, [pathwayName]);
 
-    const handleTemplateSelection = () => {
+    const handleTemplateSelection = useCallback(() => {
         if (selectedTemplates.length > 0) {
             setCurrentStep('build');
         }
-    }
+    }, [selectedTemplates]);
 
     const templates = [
         { id: '1', title: 'Fill in the blanks' },
@@ -46,22 +58,7 @@ const AgendaSection = () => {
         { id: '3', title: 'Review Based Questions' },
         { id: '4', title: 'Arrange in Correct Order' },
         { id: '5', title: 'Basic puzzles' },
-    ]
-
-    const isStepComplete = (step: typeof currentStep) => {
-        switch (step) {
-            case 'upload':
-                return fileUploaded;
-            case 'name':
-                return pathwayName.trim() !== '';
-            case 'templates':
-                return selectedTemplates.length > 0;
-            case 'build':
-                return true;
-            default:
-                return false;
-        }
-    }
+    ];
 
     return (
         <section className="w-full bg-[#FFFC6D] min-h-screen">
@@ -100,7 +97,7 @@ const AgendaSection = () => {
                     <div className="relative">
                         <div className="bg-[#94a4ff] rounded-2xl p-4 shadow-xl">
                             <img
-                                src="https://res.cloudinary.com/dnvh2fya6/image/upload/v1730567227/MyBus/a431804f-0855-4212-b67a-765c3de500bb_xhulhj.jpg"
+                                src="/api/placeholder/400/300"
                                 alt="Agenda Planner Interface"
                                 className="w-full h-auto rounded-lg"
                             />
@@ -153,17 +150,22 @@ const AgendaSection = () => {
                                 </TabsContent>
                                 <TabsContent value="url">
                                     <div className="space-y-4">
-                                        <Input
-                                            type="url"
-                                            placeholder="Enter your URL here"
-                                            className="w-full p-4"
-                                            onChange={(e) => {
-                                                if (e.target.value) {
-                                                    setFileUploaded(true);
-                                                    setCurrentStep('name');
-                                                }
-                                            }}
-                                        />
+                                        <div className="flex gap-4">
+                                            <Input
+                                                type="url"
+                                                placeholder="Enter your URL here"
+                                                className="w-full p-4"
+                                                value={url}
+                                                onChange={handleUrlChange}
+                                            />
+                                            <Button 
+                                                onClick={handleUrlSubmit}
+                                                disabled={!url.trim()}
+                                                className="bg-[#0A0B1F] text-white"
+                                            >
+                                                Next
+                                            </Button>
+                                        </div>
                                     </div>
                                 </TabsContent>
                             </Tabs>
@@ -181,11 +183,6 @@ const AgendaSection = () => {
                                     className="w-full p-4"
                                     value={pathwayName}
                                     onChange={(e) => setPathwayName(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleNameSubmit();
-                                        }
-                                    }}
                                 />
                                 <Button
                                     onClick={handleNameSubmit}
@@ -271,7 +268,7 @@ const AgendaSection = () => {
                 onComplete={() => console.log('Pathway creation completed!')}
             />
         </section>
-    )
-}
+    );
+};
 
-export default AgendaSection
+export default AgendaSection;

@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import FeedbackMessage from './FeedbackMessage'
+import Cheesie from './Cheesie'
 
 interface Option {
   id: string
@@ -14,72 +13,55 @@ interface Option {
 interface MultipleChoiceQuestionProps {
   question: string
   options: Option[]
-  correctAnswers: string[]
+  correctAnswer: string
 }
 
 const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   question,
   options,
-  correctAnswers,
+  correctAnswer,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const [showFeedback, setShowFeedback] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
-
-  const handleOptionChange = (optionId: string) => {
-    setSelectedOptions((prev) =>
-      prev.includes(optionId)
-        ? prev.filter((id) => id !== optionId)
-        : [...prev, optionId]
-    )
-  }
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
 
   const handleSubmit = () => {
-    const correct =
-      selectedOptions.length === correctAnswers.length &&
-      selectedOptions.every((option) => correctAnswers.includes(option))
-    setIsCorrect(correct)
-    setShowFeedback(true)
+    if (selectedOption) {
+      setIsCorrect(selectedOption === correctAnswer)
+    }
   }
 
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-primary">{question}</CardTitle>
+        <CardTitle className="text-2xl font-bold text-primary">Multiple Choice Question</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <Cheesie
+          emotion={isCorrect === null ? 'thinking' : isCorrect ? 'excited' : 'confused'}
+          message={
+            isCorrect === null
+              ? "Time for a multiple choice question! What do you think is the right answer?"
+              : isCorrect
+                ? "Fantastic! You've selected the correct answer!"
+                : "Oh no! That's not the right answer. Want to try again?"
+          }
+        />
+        <p className="mb-4">{question}</p>
+        <RadioGroup onValueChange={setSelectedOption} className="space-y-2">
           {options.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={option.id}
-                checked={selectedOptions.includes(option.id)}
-                onCheckedChange={() => handleOptionChange(option.id)}
-              />
-              <Label htmlFor={option.id} className="text-lg">
-                {option.text}
-              </Label>
+              <RadioGroupItem value={option.id} id={option.id} />
+              <Label htmlFor={option.id}>{option.text}</Label>
             </div>
           ))}
-        </div>
-        <motion.div
-          className="mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Button
-            onClick={handleSubmit}
-            disabled={selectedOptions.length === 0}
-            className="w-full"
-          >
-            Submit Answer
-          </Button>
-        </motion.div>
+        </RadioGroup>
+        <Button onClick={handleSubmit} className="mt-4 w-full" disabled={!selectedOption}>
+          Submit Answer
+        </Button>
       </CardContent>
-      {showFeedback && <FeedbackMessage isCorrect={isCorrect} />}
     </Card>
   )
 }
 
 export default MultipleChoiceQuestion
+

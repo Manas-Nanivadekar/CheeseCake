@@ -45,44 +45,35 @@ export function CheesieGuide({ currentStep, onComplete }: CheesieGuideProps) {
           exit={{ opacity: 0, y: 50 }}
           className="fixed bottom-6 right-6 flex items-end gap-4 z-50"
         >
-          <div className="bg-white rounded-lg p-6 shadow-lg w-80">
+          <div className="bg-[#FFFC6D] rounded-lg p-6 shadow-lg w-80">
             <div className="flex justify-between items-start mb-4">
               <h3 className="font-bold text-lg text-primary">Step {steps[currentStep].progress / 25} of 4</h3>
               <button
                 onClick={() => setShowGuide(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-black hover:text-gray-600 transition-colors"
               >
                 ×
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">{steps[currentStep].message}</p>
+            <p className="text-sm text-gray-800 mb-4">{steps[currentStep].message}</p>
             <Progress value={progress} className="h-2 mb-2" />
-            <p className="text-xs text-gray-400 text-right">{progress}% Complete</p>
+            <p className="text-xs text-right text-black">{progress}% Complete</p>
           </div>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="relative"
           >
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/direction-T5uSb4DvTlHO8GjYgSAdkDbdFyIhgd.png"
+            {/* <img
+              src="https://res.cloudinary.com/dnvh2fya6/image/upload/v1736548958/3_vgqxwc.png"
               alt="Cheesie Guide"
-              className="w-[80px] h-[80px] object-contain cursor-pointer"
+              className="w-80 h-80 object-contain cursor-pointer"
               onClick={() => {
                 if (progress === 100) {
                   onComplete?.()
                 }
               }}
-            />
-            {progress === 100 && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-              >
-                ✓
-              </motion.div>
-            )}
+            /> */}
           </motion.div>
         </motion.div>
       )}
